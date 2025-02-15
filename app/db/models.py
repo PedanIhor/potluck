@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime, Enum, Foreign
 from sqlalchemy.orm import relationship
 
 from app.db.database import Base
-
+from app.db.schemas import CuisineType
 import enum
 
 
@@ -43,18 +43,11 @@ class FoodParty(Base):
     participations = relationship("Participation", back_populates="food_party")
 
 
-class CuisineType(enum.Enum):
-    DUTCH = "Dutch"
-    ITALIAN = "Italian"
-    BELGIAN = "Belgian"
-    OTHER = "Other"
-
-
 class Dish(Base):
     __tablename__ = "dish"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
     description = Column(String)
     cuisine = Column(Enum(CuisineType), nullable=False)
     participations = relationship("Participation", secondary=dishes_participations, back_populates="dishes")

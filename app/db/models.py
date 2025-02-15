@@ -40,13 +40,13 @@ class FoodParty(Base):
     description = Column(String)
     date = Column(DateTime)
     location = Column(String)
+    host_id = Column(Integer, ForeignKey("user.id"))
 
     host = relationship("User", back_populates="hosts_parties")
     participations = relationship("Participation", back_populates="food_party")
 
     class Config:
         from_attributes = True
-
 
 
 class CuisineType(enum.Enum):

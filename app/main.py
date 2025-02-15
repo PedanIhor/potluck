@@ -3,8 +3,14 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db import models, schemas, crud, database
+from app.auth import authentication
+from app.routers import (
+    food_parties,
+)
 
-app = FastAPI(docs_url="/api/docs")
+app = FastAPI()
+app.include_router(authentication.router)
+app.include_router(food_parties.router)
 
 # Configure CORS
 app.add_middleware(
@@ -27,3 +33,4 @@ def read_user(user_id: int, db: Session = Depends(database.get_db)):
     if user is None:
         return {"error": "User not found"}
     return user
+

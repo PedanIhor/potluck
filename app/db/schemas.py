@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-import typing as t
+import typing as t, enum
 
 
 class UserBase(BaseModel):
@@ -61,7 +61,7 @@ class FoodPartyScheme(BaseModel):
     date: datetime
     location: str
     host_id: int
-    participations: t.List[int]
+    participations: t.List['ParticipationScheme']
 
     class Config:
         from_attributes = True
@@ -77,7 +77,32 @@ class ParticipationScheme(BaseModel):
     id: int
     user_id: int
     food_party_id: int
-    dishes: t.List[int]
+    dishes: t.List['DishScheme']
+
+    class Config:
+        from_attributes = True
+
+
+class CuisineType(str, enum.Enum):
+    DUTCH = "DUTCH"
+    ITALIAN = "ITALIAN"
+    BELGIAN = "BELGIAN"
+    OTHER = "OTHER"
+
+    class Config:
+        from_attributes = True
+
+class DishBase(BaseModel):
+    name: str
+    description: str = None
+    cuisine: CuisineType
+
+
+class DishScheme(BaseModel):
+    id: int
+    name: str
+    description: str = None
+    cuisine: CuisineType
 
     class Config:
         from_attributes = True

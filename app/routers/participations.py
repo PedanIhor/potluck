@@ -7,8 +7,8 @@ from app.db.schemas import ParticipationBase, ParticipationScheme
 from app.db import db_participation
 
 router = APIRouter(
-    prefix="/participate",
-    tags=["Participate"],
+    prefix="/participation",
+    tags=["Participation"],
 )
 
 

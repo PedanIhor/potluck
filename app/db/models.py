@@ -28,6 +28,9 @@ class User(Base):
     hosts_parties = relationship("FoodParty", back_populates="host")
     participations = relationship("Participation", back_populates="user")
 
+    class Config:
+        from_attributes = True
+
 
 class FoodParty(Base):
     __tablename__ = "food_party"
@@ -40,6 +43,10 @@ class FoodParty(Base):
 
     host = relationship("User", back_populates="hosts_parties")
     participations = relationship("Participation", back_populates="food_party")
+
+    class Config:
+        from_attributes = True
+
 
 
 class CuisineType(enum.Enum):
@@ -58,6 +65,10 @@ class Dish(Base):
     cuisine = Column(Enum(CuisineType), nullable=False)
     participations = relationship("Participation", secondary=dishes_participations, back_populates="dishes")
 
+    class Config:
+        from_attributes = True
+
+
 
 class Participation(Base):
     __tablename__ = "participation"
@@ -69,3 +80,7 @@ class Participation(Base):
     user = relationship("User", back_populates="participations")
     food_party = relationship("FoodParty", back_populates="participations")
     dishes = relationship("Dish", secondary=dishes_participations, back_populates="participations")
+
+    class Config:
+        from_attributes = True
+

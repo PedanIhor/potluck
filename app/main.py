@@ -5,6 +5,8 @@ from app.db import models, schemas, crud, database
 
 app = FastAPI()
 
+models.Base.metadata.create_all(bind=database.engine)
+
 @app.post("/users/", response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     return crud.create_user(db=db, user=user)

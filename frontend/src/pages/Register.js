@@ -10,15 +10,40 @@ function Register() {
     last_name: '',
   });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
     try {
-      await userService.register(formData);
-      navigate('/login');
+      // Validate password
+      if (formData.password.length < 6) {
+        throw new Error('Password must be at least 6 characters long');
+      }
+
+      // Register the user
+      await userService.register({
+        email: formData.email,
+        password: formData.password,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+      });
+
+      // Redirect to login page after successful registration
+      navigate('/login', { 
+        state: { message: 'Registration successful! Please login.' }
+      });
     } catch (err) {
-      setError('Registration failed');
+      if (err.response?.data?.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError(err.message || 'Registration failed. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,6 +67,7 @@ function Register() {
             value={formData.email}
             onChange={handleChange}
             required
+            disabled={isLoading}
           />
         </div>
         <div>
@@ -52,6 +78,8 @@ function Register() {
             value={formData.password}
             onChange={handleChange}
             required
+            disabled={isLoading}
+            minLength={6}
           />
         </div>
         <div>
@@ -62,6 +90,7 @@ function Register() {
             value={formData.first_name}
             onChange={handleChange}
             required
+            disabled={isLoading}
           />
         </div>
         <div>
@@ -72,9 +101,12 @@ function Register() {
             value={formData.last_name}
             onChange={handleChange}
             required
+            disabled={isLoading}
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
       </form>
     </div>
   );

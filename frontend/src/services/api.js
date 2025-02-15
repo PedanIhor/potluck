@@ -4,9 +4,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Add a request interceptor for authentication
@@ -19,21 +16,30 @@ api.interceptors.request.use((config) => {
 });
 
 export const userService = {
-  login: async (email, password) => {
+  login: async (formData) => {
     try {
-      const response = await api.post('/api/token', { email, password });
+      // For login, we need to use form-urlencoded format
+      const response = await api.post('/token', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response?.data || error;
     }
   },
 
   register: async (userData) => {
     try {
-      const response = await api.post('/users/', userData);
+      const response = await api.post('/users/', userData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response?.data || error;
     }
   },
 
@@ -42,7 +48,7 @@ export const userService = {
       const response = await api.get('/users/me');
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response?.data || error;
     }
   },
 };

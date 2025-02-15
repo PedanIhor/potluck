@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 import typing as t
 
 
@@ -18,21 +19,21 @@ class UserCreate(UserBase):
     password: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserEdit(UserBase):
     password: t.Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class User(UserBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Token(BaseModel):
@@ -43,3 +44,24 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: str = None
     permissions: str = "user"
+
+
+class FoodPartyBase(BaseModel):
+    name: str
+    description: str = None
+    date: datetime
+    location: str
+    host_id: int
+
+
+class FoodPartyScheme(BaseModel):
+    id: int
+    name: str
+    description: str = None
+    date: datetime
+    location: str
+    host_id: int
+    participations: t.List[int]
+
+    class Config:
+        from_attributes = True

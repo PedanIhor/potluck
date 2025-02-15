@@ -15,6 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+models.Base.metadata.create_all(bind=database.engine)
+
 @app.post("/users/", response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     return crud.create_user(db=db, user=user)

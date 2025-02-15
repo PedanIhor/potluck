@@ -1,9 +1,19 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.db import models, schemas, crud, database
 
-app = FastAPI()
+app = FastAPI(docs_url="/api/docs")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # React app URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/users/", response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):

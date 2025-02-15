@@ -65,3 +65,19 @@ class FoodPartyScheme(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ParticipationBase(BaseModel):
+    user_id: int
+    food_party_id: int
+    dishes: t.List[int]
+
+
+class ParticipationScheme(BaseModel):
+    id: int
+    user_id: int
+    food_party_id: int
+    dishes: t.List[int]
+
+    class Config:
+        from_attributes = True

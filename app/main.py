@@ -6,11 +6,13 @@ from app.db import models, schemas, crud, database
 from app.auth import authentication
 from app.routers import (
     food_parties,
+    participations
 )
 
 app = FastAPI()
 app.include_router(authentication.router)
 app.include_router(food_parties.router)
+app.include_router(participations.router)
 
 # Configure CORS
 app.add_middleware(

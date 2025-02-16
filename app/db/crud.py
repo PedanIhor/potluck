@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import typing as t
 
 from . import models, schemas
-from app.core.security import get_password_hash
+from app.db.hash import Hash
 
 
 def get_user(db: Session, user_id: int):
@@ -24,7 +24,7 @@ def get_users(
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    hashed_password = get_password_hash(user.password)
+    hashed_password = Hash.bcrypt(user.password)
     db_user = models.User(
         first_name=user.first_name,
         last_name=user.last_name,

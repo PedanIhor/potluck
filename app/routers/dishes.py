@@ -13,7 +13,8 @@ router = APIRouter(
 
 @router.get("/", response_model=list[DishScheme])
 def read_dishes(cuisine: CuisineType = None, db = Depends(get_db), current_user: CurrentUser = Depends(get_current_user)):
-    return db_dish.get_all_dishes(db)
+    print(cuisine)
+    return db_dish.get_all_dishes(db, cuisine)
 
 
 @router.post("/", response_model=DishScheme)

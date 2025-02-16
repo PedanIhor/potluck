@@ -6,6 +6,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CreateParty from './pages/CreateParty';
 import PartyDetail from './pages/PartyDetail';
+import CreateDish from './pages/CreateDish';
+import ParticipationForm from './pages/ParticipationForm';
 import { ThemeProvider, createTheme } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
@@ -36,6 +38,8 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/create-party" element={<CreateParty />} />
               <Route path="/party/:id" element={<PartyDetail />} />
+              <Route path="/create-dish" element={<CreateDish />} />
+              <Route path="/party/:id/add-dish" element={<ParticipationForm />} />
             </Routes>
           </main>
         </div>

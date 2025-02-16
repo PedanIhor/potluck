@@ -8,7 +8,10 @@ import {
   Box,
   CircularProgress,
   Grid,
-  IconButton
+  IconButton,
+  Button,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -19,6 +22,7 @@ function PartyDetail() {
   const [party, setParty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -49,6 +53,44 @@ function PartyDetail() {
 
     fetchPartyDetails();
   }, [id, navigate]);
+
+  const handleParticipate = async () => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+
+    try {
+      await axios.post('http://localhost:8000/participation/', 
+        {
+          user_id: parseInt(userId),
+          food_party_id: parseInt(id),
+          dishes: []
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      setSuccessMessage('Successfully joined the party!');
+    } catch (err) {
+      let errorMessage = 'Failed to join the party';
+      if (err.response?.data?.detail) {
+        if (Array.isArray(err.response.data.detail)) {
+          errorMessage = err.response.data.detail
+            .map(error => error.msg)
+            .join(', ');
+        } else {
+          errorMessage = err.response.data.detail;
+        }
+      }
+      setError(errorMessage);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSuccessMessage('');
+    setError(null);
+  };
 
   if (loading) return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
@@ -110,6 +152,43 @@ function PartyDetail() {
               </Box>
             </Grid>
           </Grid>
+
+          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2 }}>
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={handleParticipate}
+            >
+              Join Party
+            </Button>
+            <Button 
+              variant="contained" 
+              color="secondary"
+              onClick={() => navigate(`/party/${id}/add-dish`)}
+            >
+              Add Dish
+            </Button>
+          </Box>
+
+          <Snackbar
+            open={!!successMessage}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+              {successMessage}
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={!!error}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+              {error}
+            </Alert>
+          </Snackbar>
         </Paper>
       </Box>
     </Container>

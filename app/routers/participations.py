@@ -32,7 +32,4 @@ def add_dishes_to_participation(participation_id: int, dishes_ids: list[int], db
     if participation is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Participation not found")
 
-    if not current_user.admin and current_user.id != participation.user_id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-
     return db_participation.add_dishes_to_participation(db, participation_id, dishes_ids)

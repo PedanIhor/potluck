@@ -1,3 +1,5 @@
+PotLuck Team 2 - Techgrounds 2025 Hackathon 14 Feb - 16 Feb
+
 To run the backend server:
 
 ```
